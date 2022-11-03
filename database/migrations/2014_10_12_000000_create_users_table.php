@@ -16,13 +16,16 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('role',10)->default('user');
-            $table->string('phone');
-            $table->boolean('activate')->default(false);
             $table->string('email')->unique();
+            $table->string('phone')->nullable();
+            $table->string('gender',10)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('activate')->default(false);
+            $table->string('role')->default('user');
             $table->rememberToken();
+            $table->foreignId('current_team_id')->nullable();
+            $table->string('profile_photo_path', 2048)->nullable();
             $table->timestamps();
         });
     }

@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('user_id');
-            $table->string('category');
+            $table->string('category_id');
             $table->text('description');
+            $table->string('image');
             $table->text('information');
             $table->integer('qty');
             $table->timestamps();

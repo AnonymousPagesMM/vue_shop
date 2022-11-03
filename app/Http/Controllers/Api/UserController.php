@@ -24,6 +24,7 @@ class UserController extends Controller
                 'email'=>$request->email,
                 'password'=>Hash::make($request->password),
                 'phone'=>$request->phone,
+                'gender'=>$request->gender,
             ]);
             $this->otpCreate($request->email);
             return response()->json(['success'=>'Please Activate'], 200);
@@ -94,7 +95,8 @@ class UserController extends Controller
             'email'=>'required',
             'password'=>'required|string|min:8',
             'confirm_password'=>'required|same:password',
-            'phone'=>'required'
+            'phone'=>'required',
+            'gender'=>'required'
         ]);
         return $result;
     }
@@ -116,7 +118,7 @@ class UserController extends Controller
         return Session::create([
             'user_id'=>$user->id,
             'token'=>time().'-'. Str::random(20).'-'.uniqid(),
-            'device'=>$request->device
+            'user_agent'=>$request->device
         ]);
     }
 }
