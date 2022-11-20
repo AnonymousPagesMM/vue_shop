@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Session extends Model
 {
+    public $timestamps = false;
     use HasFactory;
-    protected $fillable = ['user_id','token','device'];
+    protected $fillable = ['user_id','token','user_agent','id','payload','last_activity'];
 }

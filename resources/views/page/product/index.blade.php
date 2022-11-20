@@ -26,10 +26,10 @@
                                     <th scope="col">DB ID</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Image</th>
+                                    <th scope="col">Color</th>
                                     <th scope="col">Product Id</th>
                                     <th scope="col">Category</th>
                                     <th scope="col">Qty</th>
-                                    <th scope="col">Created_at</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -43,16 +43,19 @@
                                 </tr>
                                 @else
                                 @foreach ($products as $p)
-                                    <tr>
+                                    <tr style="vertical-align: middle;">
                                         <th scope="row" class="db_id">{{ $p->id }}</th>
                                         <td>{{ $p->name }}</td>
                                         <td>
                                             <a href="{{ asset('images/'.$p->image) }}"><img style="width: 100px;height:100px" src="{{ asset('images/'.$p->image) }}" alt=""></a>
                                         </td>
+                                        <td>
+                                            <i class="fa-solid fa-circle fs-4"></i>
+                                            <input type="text" disabled class="pInfo d-none" value="{{ $p->information }}">
+                                        </td>
                                         <td>{{ 'custom' }}</td>
                                         <td>{{ $p->category_name->name }}</td>
                                         <td>{{ $p->qty }}</td>
-                                        <td>{{ $p->created_at->format('d-M-Y') }}</td>
                                         <td>
                                             <div class="d-flex">
                                                 <a href="{{ route('member#product_edit',$p->id) }}" class="btn btn-primary">Edit</a>
@@ -79,6 +82,7 @@
         let _token = '{{ csrf_token() }}';
         activeSidebar('.product_view');
         $(document).ready(function() {
+            colorGet()
             $('.deleteProductBtn').click(function(){
                 let row = $(this).closest('tr');
                 let id = row.find('.db_id').html();
@@ -111,8 +115,17 @@
             })
         });
 
-        function deleteProduct(id) {
-
+        function colorGet(){
+            $('.pInfo').each(function(){
+                let info = JSON.parse($(this).val());
+                console.log(info);
+                console.log($(this).closest('td').find('.fa-circle'));
+                for (let i = 0; i < info.length; i++) {
+                    if (info[i].key == 'color') {
+                        $(this).closest('td').find('.fa-circle').css('color',info[i].value);
+                    }
+                }
+            })
         }
     </script>
 @endpush

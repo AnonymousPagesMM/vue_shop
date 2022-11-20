@@ -80,6 +80,7 @@ class ProductController extends Controller
             'qty' => 'required',
             'information' => 'required',
             'description' => 'required',
+            'image'=>'image',
         ]);
         if ($functionName == 'store') {
             $request->validate([

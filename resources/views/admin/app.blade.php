@@ -53,7 +53,8 @@
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                        <img class="rounded-circle" src="{{ asset('img/user.jpg') }}" alt=""
+                        <img class="rounded-circle profile_img"
+                            src="{{ asset('images/' . Auth::user()->profile_photo_path) }}" alt=""
                             style="width: 40px; height: 40px;">
                         <div
                             class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1">
@@ -65,12 +66,16 @@
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="index.html" class="nav-item nav-link dashboard_view"><i
+                    <a href="{{ route('dashboard') }}" class="nav-item nav-link dashboard_view"><i
                             class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="{{ route('member#product') }}" class="nav-item nav-link product_view"><i
                             class="fa fa-th me-2"></i>Product</a>
                     <a href="{{ route('member#category') }}" class="nav-item nav-link category_view"><i
                             class="fa-solid fa-list me-2"></i>Category</a>
+                    <a href="{{ route('member#order') }}?status=pending" class="nav-item nav-link order_view"><i
+                            class="fa-solid fa-clipboard-list"></i>Order</a>
+                    <a href="{{ route('member#slideShow') }}" class="nav-item nav-link slideShow_view"><i
+                            class="fa-solid fa-layer-group"></i>Slide Shows</a>
                     {{-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i></a>
                         <div class="dropdown-menu bg-transparent border-0">
@@ -168,17 +173,22 @@
                     </div>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="{{ asset('img/user.jpg') }}" alt=""
+                            <img class="rounded-circle me-lg-2 profile_img"
+                                src="{{ asset('images/' . Auth::user()->profile_photo_path) }}" alt=""
                                 style="width: 40px; height: 40px;">
                             <span class="d-none d-lg-inline-flex">{{ Auth::user()->name }}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="{{ route('profile.show') }}" class="dropdown-item">My Profile</a>
-                            <a href="#" class="dropdown-item">Settings</a>
+                            <a href="{{ route('profile.show') }}" class="dropdown-item"><i
+                                    class="fa-solid fa-circle-user"></i> My Profile</a>
+                            <a href="" onclick="event.preventDefault()" class="dropdown-item"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal"><i
+                                    class="fa-solid fa-image"></i> Profile Photo</a>
+                            <a href="#" class="dropdown-item"><i class="fa-solid fa-gear"></i> Settings</a>
                             <form method="POST" action="{{ route('logout') }}" id="logout_form">@csrf</form>
                             <a href=""
                                 onclick="event.preventDefault();document.getElementById('logout_form').submit()"
-                                class="dropdown-item">Log Out</a>
+                                class="dropdown-item"><i class="fa-solid fa-power-off"></i> Log Out</a>
                         </div>
                     </div>
                 </div>
@@ -195,7 +205,7 @@
                         <div class="col-12 col-sm-6 text-center text-sm-end">
                             <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
                             Designed By <a href="https://htmlcodex.com">HTML Codex</a>
-                            </br>
+                            <br>
                             Distributed By <a class="border-bottom" href="https://themewagon.com"
                                 target="_blank">ThemeWagon</a>
                         </div>
@@ -209,6 +219,47 @@
 
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            @if (Auth::user()->profile_photo_path)
+                                <img class="w-100 profile_img"
+                                    src="{{ asset('images/' . Auth::user()->profile_photo_path) }}" alt="">
+                            @else
+                                <img class="w-100" src="{{ asset('img/default.jpg') }}" alt="">
+                            @endif
+                        </div>
+                        <div class="row my-2">
+                            <form action="{{ route('member#user_update_image') }}" id="pImgUpForm" method="POST">
+                                @csrf
+                                <label for="">Update Image</label>
+                                <div class="col-md-9">
+                                    <input type="file" name="image" class="form-control" id="">
+                                </div>
+                                <div class="col-md-2 my-1">
+                                    <button type="submti" class="btn btn-primary">Upload</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- JavaScript Libraries -->
@@ -226,6 +277,34 @@
     <script src="{{ asset('js/main.js') }}"></script>
     <script>
         $('.dashboard_view').addClass('active');
+        $('#pImgUpForm').submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "{{ route('member#user_update_image') }}",
+                data: new FormData(this),
+                dataType: "JSON",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function(response) {
+                    if (response.error) {
+                        let err = '';
+                        response.error.forEach(e => {
+                            err += e;
+                        });
+                        Swal.fire('Error', err, 'error');
+                    }
+                    if (response.success) {
+                        $('.profile_img').attr('src', "{{ url('images') }}" + '/' + response.path);
+                        Swal.fire('Success', response.success, 'success')
+                    }
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        });
     </script>
     <script src="{{ asset('js/custom.js') }}"></script>
     @stack('script')

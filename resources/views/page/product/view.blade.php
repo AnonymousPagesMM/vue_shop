@@ -33,10 +33,17 @@
                             <div class="bg-light rounded h-100 p-4">
                                 <table class="table">
                                     <tbody id="tBodyInformation">
-                                        {{-- <tr>
-                                            <td>John</td>
-                                            <td>Doe</td>
-                                        </tr> --}}
+
+                                    </tbody>
+                                    <tbody>
+                                        <tr>
+                                            <td>Remain Qty</td>
+                                            <td>{{ $product->qty }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Created At</td>
+                                            <td>{{ $product->created_at->format('d-M-Y') }}</td>
+                                        </tr>
                                     </tbody>
                                     <textarea name="" id="productInformation" class="d-none" readonly cols="30" rows="10">{{ $product->information }}</textarea>
                                 </table>

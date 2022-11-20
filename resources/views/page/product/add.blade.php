@@ -60,7 +60,7 @@
                             <div id="infoContainer" class="information m-0 p-0">
                                 <div class="row m-0 p-0 sub-information">
                                     <div class="col-md-5">
-                                        <input type="text" required placeholder="Enter Key" value="Price"
+                                        <input type="text" required placeholder="Enter Key" readonly value="Price"
                                             class="key form-control  @error('information') is-invalid @enderror">
                                     </div>
                                     <div class="col-md-6">
@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="row m-0 p-0 sub-information my-1">
                                     <div class="col-md-5">
-                                        <input type="text" placeholder="Enter Key"
+                                        <input type="text" placeholder="Enter Key" value="Color" readonly
                                             class="key form-control @error('information') is-invalid @enderror">
                                     </div>
                                     <div class="col-md-6">

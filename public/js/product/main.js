@@ -49,7 +49,7 @@ function informationGet(){
     let value = [];
         let subinfo = $('.sub-information');
         subinfo.each(function(index) {
-            let i_key = $(this).find('.key').val();
+            let i_key = $(this).find('.key').val().toLowerCase();
             let i_value = $(this).find('.value').val()
             if (i_key.length > 0 && i_value.length > 0) {
                 value.push({
